@@ -128,7 +128,7 @@ def simulation(N, Distance_Matrix, best_solution, current_solution, min_weight):
     end_time = time.time()
     t =[]
     t.append(end_time - start_time)
-    save_data(best_solution, 0)
+    save_data(min_weight, 0)
     save_data_time(t, 0)
 
 def main():
