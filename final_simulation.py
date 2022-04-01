@@ -280,7 +280,7 @@ def simulation_2_opt_sym(nodi):
     save_data_time_2opt_sym(TIME, 320)
 
 def main():
-    k = 100
+    k = 40000
     repeats = 5
     nodi = 6 #nodi = number of diverent instances
 
