@@ -17,12 +17,14 @@ N = int(Dimension)
 for i in range(0, N):
     x,y = infile.readline().strip().split()[1:]
     nodelist.append([float(x), float(y)])
+
 '''   
 for i in range(0,N):
     for j in range(0, N):
         xd = nodelist[i][i]
         distances[i][j] = distances[j][i] = int(math.sqrt())
 '''
+
 print(nodelist[0][0])
 # Close input file
 infile.close()

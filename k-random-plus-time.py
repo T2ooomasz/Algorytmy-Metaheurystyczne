@@ -1,5 +1,5 @@
 import math
-# from tsplib95 import distances
+from tsplib95 import distances
 import numpy as np
 import random
 import matplotlib.pyplot as plt
@@ -45,72 +45,86 @@ def get_weight(cities_list, Distance_Matrix):
     sum = sum + Distance_Matrix[n-1][0]
     return sum
 
-def take_figure(X, index):
+def save_figure(X, index):
     plt.plot(X, '-b')
     plt.xlabel('iteration')
     plt.ylabel('best solution distance')
     plt.title('Distance to iteration')
     plt.grid(True)
-    string = "obrazki/figure"
+    string = "obrazki/k-random"
     string += str(index)
     string += ".png"
     plt.savefig(string)
 
-def take_data(X, index):
-    string = "data/set"
+def save_data(X, index):
+    string = "data-k-random/k-random"
     string += str(index)
     string += ".csv"
     np.savetxt(string, X, delimiter=",")
 
-def k_random(N, k, Distance_Matrix):
-    X = [None]*k
+def save_data_time(X, index):
+    string = "data-k-random/k-random-time"
+    string += str(index)
+    string += ".csv"
+    np.savetxt(string, X, delimiter=",")
 
+
+
+def k_random(N, k, Distance_Matrix):
+    X =  np.array([])
+    TIME = np.array([])
     #initial step
     trace = random.sample(range(N),N)
-    min_weight_sym  = get_weight(trace, Distance_Matrix)# = funkcja liczaca wage
+    min_weight  = get_weight(trace, Distance_Matrix)# = funkcja liczaca wage
 
+    start_time = time.time()
     # Wielka pentla powtarzajaca sie k-razy
     for i in range(k):
         new_trace = random.sample(range(N),N)
         new_weight = get_weight(new_trace, Distance_Matrix)# = funkcja liczaca wage
-        if (new_weight < min_weight_sym):
-            min_weight_sym = new_weight
+        if (new_weight < min_weight):
+            min_weight = new_weight
             trace = new_trace
-            #number_of_better_solution += 1
-        X[i] = min_weight_sym
+            #number_of_better_solution += 
+        end_time = time.time()
+        t = (end_time - start_time)
+        X = np.append(X, np.array([min_weight]))
+        TIME = np.append(TIME, np.array([t]))
 
     # return best_solutin [iteration] for given N and k
-    return X
+    return X, TIME
 
 def average_for_given(repeats, N, k, rang, Distance_Matrix):
     X = np.zeros((k), dtype=np.dtype(int))
+    TIME = np.zeros((k), dtype=np.dtype(float))
     for i in range(repeats):
-        Xnew = k_random(N, k, Distance_Matrix)
-        X = np.add(X, Xnew)    
+        Xnew, TIMEnew = k_random(N, k, Distance_Matrix)
+        X = np.add(X, Xnew)
+        TIME = np.add(TIME, TIMEnew) 
     X = X / repeats
-    return X
+    TIME = TIME / repeats
+    return X, TIME
     
 def simulation(repeats, N, k, Distance_Matrix):
     # Distance_Matrix = set_Matrix()
     rang = 1
     for i in range(rang):
-        X = average_for_given(repeats, N, k, rang, Distance_Matrix)
-        take_figure(X, i)
-        take_data(X, i)
+        X, TIME = average_for_given(repeats, N, k, rang, Distance_Matrix)
+        save_figure(X, k)
+        save_data(X, k)
+        save_data_time(TIME, k)
         k *= 10
 
 def main():
     # N = 10
-    k = 10000
-    repeats = 100
+    k = 100000
+    repeats = 1000
     max_distance = 500
     # Distance_Matrix = symetric_random_instance(N, 1, max_distance, 2100) # distances from 1 to 100
     Distance_Matrix = set_Matrix()
     N = np.shape(Distance_Matrix)[0]
-    start_time = time.time()
+    
     simulation(repeats, N, k, Distance_Matrix)
-    end_time = time.time()
-    print("--- %s seconds ---" % (end_time - start_time))
-
+    
 if __name__ == '__main__':
     main()
