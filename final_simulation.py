@@ -135,8 +135,8 @@ def simulation_k_random_asym(nodi, repeats, k):
         TIME.append(TIME_new)
         number_of_cities *= 2
 
-    save_data_k_random_asym(X, 320)
-    save_data_time_k_random_asym(TIME, 320)
+    save_data_k_random_asym(X, 1280)
+    save_data_time_k_random_asym(TIME, 1280)
 
 def simulation_k_random_sym(nodi, repeats, k):
     number_of_cities = 10
@@ -149,8 +149,8 @@ def simulation_k_random_sym(nodi, repeats, k):
         TIME.append(TIME_new)
         number_of_cities *= 2
 
-    save_data_k_random_sym(X, 320)
-    save_data_time_k_random_sym(TIME, 320)
+    save_data_k_random_sym(X, 1280)
+    save_data_time_k_random_sym(TIME, 1280)
 
 def swapPositions(list, pos1, pos2):
     list[pos1], list[pos2] = list[pos2], list[pos1]
@@ -256,14 +256,14 @@ def simulation_2_opt_asym(nodi):
     X = []
     TIME = []
     for i in range(nodi):
-        Distance_Matrix = symetric_random_instance(number_of_cities, 100, 200)
+        Distance_Matrix = asymetric_random_instance(number_of_cities, 100, 200)
         X_new, TIME_new = simulation_2opt_asym(number_of_cities, Distance_Matrix)
         X.append(X_new)
         TIME.append(TIME_new)
         number_of_cities *= 2
 
-    save_data_2opt_asym(X, 320)
-    save_data_time_2opt_asym(TIME, 320)
+    save_data_2opt_asym(X, 1280)
+    save_data_time_2opt_asym(TIME, 1280)
 
 def simulation_2_opt_sym(nodi):
     number_of_cities = 10
@@ -276,18 +276,18 @@ def simulation_2_opt_sym(nodi):
         TIME.append(TIME_new)
         number_of_cities *= 2
 
-    save_data_2opt_sym(X, 320)
-    save_data_time_2opt_sym(TIME, 320)
+    save_data_2opt_sym(X, 1280)
+    save_data_time_2opt_sym(TIME, 1280)
 
 def main():
     k = 40000
     repeats = 5
-    nodi = 6 #nodi = number of diverent instances
+    nodi = 8 #nodi = number of diverent instances
 
-    simulation_k_random_asym(nodi, repeats, k)
-    simulation_k_random_sym(nodi, repeats, k)
+    # simulation_k_random_asym(nodi, repeats, k)
+    # simulation_k_random_sym(nodi, repeats, k)
     simulation_2_opt_asym(nodi)
-    simulation_2_opt_sym(nodi)
+    # simulation_2_opt_sym(nodi)
 
 
 if __name__ == '__main__':

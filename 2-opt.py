@@ -7,7 +7,7 @@ import time
 
 def set_Matrix():
     # Open input file
-    infile = open('berlin52.tsp', 'r')
+    infile = open('instance/berlin52.tsp', 'r')
 
     # Read instance header
     Name = infile.readline().strip().split()[1] # NAME
@@ -65,13 +65,13 @@ def save_figure(X, index):
     plt.savefig(string)
 
 def save_data(X, index):
-    string = "data-2-opt/asym-2-opt"
+    string = "data-2-opt/2-opt"
     string += str(index)
     string += ".csv"
     np.savetxt(string, X, delimiter=",")
 
 def save_data_time(X, index):
-    string = "data-2-opt/asym-2-opt-time"
+    string = "data-2-opt/2-opt-time"
     string += str(index)
     string += ".csv"
     np.savetxt(string, X, delimiter=",")
@@ -104,8 +104,9 @@ def invert(city_list, i, j):
 
     return current_trace
 
-def simulation(N, Distance_Matrix, best_solution, current_solution, min_weight):
+def simulation(X,N, Distance_Matrix, best_solution, current_solution, min_weight):
     improved = True
+    t =[]
     start_time = time.time()
     while(improved):
         i = 0
@@ -121,25 +122,30 @@ def simulation(N, Distance_Matrix, best_solution, current_solution, min_weight):
                     i = 0
                     j = 0
                 
+                X.append(min_weight)
+                end_time = time.time()
+                t.append(end_time - start_time)
                 j += 1
+            
             i += 1
-
+        
         improved = False
-    end_time = time.time()
-    t =[]
-    t.append(end_time - start_time)
-    save_data(min_weight, 0)
-    save_data_time(t, 0)
+    
+    save_data(X, 999)
+    save_data_time(t, 999)
 
 def main():
-    N = 320
-    min_distance = 100
-    max_distance = 200
-    Distance_Matrix = asymetric_random_instance(N, min_distance, max_distance)
+    #N = 320
+    #min_distance = 100
+    #max_distance = 200
+    #Distance_Matrix = asymetric_random_instance(N, min_distance, max_distance)
+
+    Distance_Matrix = set_Matrix()
+    N = np.shape(Distance_Matrix)[0]
 
     best_solution = [None]*N
     current_solution = [None]*N
-
+    X = []
     aval_city = list(range(0,N))
     # trace = random.sample(range(N),N)
     for i in range(N):
@@ -147,7 +153,7 @@ def main():
         best_solution[i] = go_to
     min_weight  = get_weight(best_solution, Distance_Matrix)# = funkcja liczaca wage
     
-    simulation(N, Distance_Matrix, best_solution, current_solution, min_weight)
+    simulation(X, N, Distance_Matrix, best_solution, current_solution, min_weight)
     
 if __name__ == '__main__':
     main()
