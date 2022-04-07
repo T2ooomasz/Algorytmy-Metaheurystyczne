@@ -41,7 +41,6 @@ def euclidean_random_instance(number_of_cities, max_x, max_y):
     for i in range(0, number_of_cities):
         for j in range(0, number_of_cities):
             distance_matrix[i][j] = int(distance((coord[i][0], coord[i][1]), (coord[j][0], coord[j][1])))
-            distance_matrix[i][j] = int(distance((coord[i][0], coord[i][1]), (coord[j][0], coord[j][1])))
     return number_of_cities, distance_matrix
 
 
@@ -180,16 +179,16 @@ def nearest_swap_neighbor(tour, distance_matrix):
 
 def krandom(n, k, distance_matrix):
     results = [None] * k
-    random_tour = rand_tour(n)
-    min_weight = get_weight(random_tour, distance_matrix)
+    best_tour = rand_tour(n)
+    min_weight = get_weight(best_tour, distance_matrix)
     for i in range(k):
         new_tour = rand_tour(n)
         new_weight = get_weight(new_tour, distance_matrix)
         if new_weight < min_weight:
             min_weight = new_weight
-            random_tour = new_tour
+            best_tour = new_tour
         results[i] = min_weight
-    return results
+    return results, best_tour
 
 
 def invert(tour, i, j):
@@ -201,13 +200,12 @@ def invert(tour, i, j):
     return current_tour
 
 
-def opt(n, distance_matrix):
+def opt2(n, distance_matrix):
     best_solution = [None] * n
     current_solution = [None] * n
     results = []
-    for i in range(n):
-        solution = nearest_neighbor(n, i, distance_matrix)
-        best_solution[i] = solution
+    solution = nearest_neighbor(n, 0, distance_matrix)
+    best_solution = solution
     min_weight = get_weight(best_solution, distance_matrix)
     improved = True
     while improved:
@@ -218,7 +216,7 @@ def opt(n, distance_matrix):
                 current_solution = best_solution.copy()
                 current_solution = invert(current_solution, i, j)
                 current_distance = get_weight(current_solution, distance_matrix)
-                if current_distance.any() < min_weight.any():
+                if current_distance < min_weight:
                     best_solution = current_solution
                     min_weight = current_distance
                     i = 0
@@ -227,7 +225,7 @@ def opt(n, distance_matrix):
                 j += 1
             i += 1
         improved = False
-    return results
+    return best_solution
 
 
 def prd1(solution, best_known):
@@ -245,11 +243,10 @@ def print_tour(tour):
 
 
 def main(param):
-    print('It works')
+
     while True:
         try:
             opt, args = getopt.getopt(param, "", ['option=', 'type=', ])
-            print(opt)
         except getopt.GetoptError as err:
             print('err')
             sys.exit(2)
@@ -294,17 +291,20 @@ def main(param):
                 while True:
                         sys.stdout.write("1. Calculate k-random\n")
                         sys.stdout.write("2. Calculate nearest neighbor\n")
-                        sys.stdout.write("3. Calculate weight of tour\n")
+                        sys.stdout.write("3. Calculate weight of random tour\n")
                         sys.stdout.write("4. Print tour\n")
                         sys.stdout.write("5. Print distance matrix\n")
                         sys.stdout.write("6. Calculate extended nearest neighbor\n")
+                        sys.stdout.write("7. Calculate 2opt\n")
                         option = int(input().strip())
                         if option == 1:
                             sys.stdout.write("Enter numer of iterations:\n")
                             k = int(input().strip())
-                            results = krandom(number_of_cities, k, distance_matrix)
+                            results, best_tour = krandom(number_of_cities, k, distance_matrix)
                             results.sort()
                             print(results)
+                            print('best tour: ')
+                            print(best_tour)
                         elif option == 2:
                             sys.stdout.write("Enter number of first city:\n")
                             i = int(input().strip())
@@ -328,7 +328,12 @@ def main(param):
                             best_tour = nearest_swap_neighbor(tour, distance_matrix)
                             print(best_tour)
                             best_weight = get_weight(best_tour, distance_matrix)
-                            print(best_weight)         
+                            print(best_weight)   
+                        elif option == 7:
+                            best_tour = opt2(number_of_cities, distance_matrix)   
+                            print(best_tour) 
+                            weight = get_weight(best_tour, distance_matrix)
+                            print(weight)  
                         else:
                             sys.exit(2)
 
