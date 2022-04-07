@@ -32,6 +32,7 @@ def symetric_random_instance(number_of_cities, min_distance, max_distance):
             rand_matrix[j][i] = rand_matrix[i][j]
     return rand_matrix
 
+
 def save_figure(X, index):
     plt.plot(X, '-b')
     plt.xlabel('iteration')
@@ -123,7 +124,6 @@ def average_for_given(repeats, N, k, Distance_Matrix):
     TIME /= repeats
     return min_weight, TIME
     
-
 def simulation_k_random_asym(nodi, repeats, k):
     number_of_cities = 10
     X = []
@@ -179,7 +179,6 @@ def invert(city_list, i, j):
         # print(current_trace)
 
     return current_trace
-
 
 def simulation_2opt_asym(N, Distance_Matrix):
     best_solution = [None]*N
