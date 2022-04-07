@@ -281,11 +281,13 @@ def main():
                 print("Enter name of file: ")
                 filename = input().strip()
                 number_of_cities, distance_matrix = read_file(filename, type='tsp')
+                print(distance_matrix)
                                   
             elif option == 2:
                 print("Enter name of file:")
                 filename = input().strip()
                 number_of_cities, distance_matrix = read_file(filename, type='atsp')
+                print(distance_matrix)
 
             print("Enter optimal distance:")
             best_known = int(input().strip())
