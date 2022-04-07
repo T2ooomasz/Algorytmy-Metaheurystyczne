@@ -1,10 +1,9 @@
-import getopt
 import math
 import random
-import sys
 import tsplib95
 from tsplib95 import distances
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 def matrix(coord, distance):
@@ -12,7 +11,6 @@ def matrix(coord, distance):
     distance_matrix = np.zeros((n, n))
     for i in range(0, n):
         for j in range(0, n):
-            distance_matrix[i][j] = int(distance((coord[i][0], coord[i][1]), (coord[j][0], coord[j][1])))
             distance_matrix[i][j] = int(distance((coord[i][0], coord[i][1]), (coord[j][0], coord[j][1])))
     return n, distance_matrix
 
@@ -43,7 +41,7 @@ def euclidean_random_instance(number_of_cities, max_x, max_y, seed):
     for i in range(0, number_of_cities):
         for j in range(0, number_of_cities):
             distance_matrix[i][j] = int(distance((coord[i][0], coord[i][1]), (coord[j][0], coord[j][1])))
-    return number_of_cities, distance_matrix
+    return number_of_cities, distance_matrix, coord
 
 
 def explicit_instance(filename, type):
@@ -164,7 +162,17 @@ def nearest_neighbor(n, i, distance_matrix):
     return tour
 
 
-def nearest_swap_neighbor(tour, distance_matrix):
+def nearest_neighbor_extended(n, distance_matrix):
+    best_tour = nearest_neighbor(n, 0, distance_matrix)
+    for i in range(1,n):
+        current_tour = nearest_neighbor(n, i, distance_matrix)
+        if get_weight(current_tour, distance_matrix) < get_weight(best_tour, distance_matrix):
+            best_tour = current_tour
+    return best_tour
+
+
+def nearest_swap_neighbor(number_of_cities, distance_matrix):
+    tour = nearest_neighbor(number_of_cities, 0, distance_matrix)
     length = len(tour)
     min_weight = get_weight(tour, distance_matrix)
     best_tour = tour.copy()
@@ -246,6 +254,7 @@ def print_tour(tour):
 
 
 def print_data(best_tour, best_known, distance_matrix):
+    print("\n----------------------------------------------------------\n")
     # cykl
     print("Cykl: ", best_tour)
     # dł ścieżki
@@ -253,6 +262,11 @@ def print_data(best_tour, best_known, distance_matrix):
     # PRD
     print("PRD :", prd2(best_tour, best_known, distance_matrix), "%")
 
+
+def scatter_cities(cities_list):
+    X, Y = cities_list.T
+    plt.scatter(X, Y, marker='x')
+    plt.show()
 
 def main():
     while True:
@@ -281,26 +295,29 @@ def main():
             print("1. random euclidean 2D \n2. random symetric \n3. random asymetric")
             option = int(input().strip())
             if option == 1:
-                print("Enter the number of cities:\n")
+                print("Enter the number of cities:")
                 n = int(input().strip())
-                print("Enter max x:\n")
+                print("Enter max x:")
                 max_x = int(input().strip())
-                print("Enter max y:\n")
+                print("Enter max y:")
                 max_y = int(input().strip())
-                print("Enter seed:\n")
+                print("Enter seed:")
                 seed = int(input().strip())
-                number_of_cities, distance_matrix = euclidean_random_instance(n, max_x, max_y, seed)
+                number_of_cities, distance_matrix, coord = euclidean_random_instance(n, max_x, max_y, seed)
+                # scatter_cities(coord) # to plot scatter of cities
+                print(distance_matrix)
 
             elif option == 2:
-                print("Enter the number of cities:\n")
+                print("Enter the number of cities:")
                 n = int(input().strip())
-                print("Enter min distance:\n")
+                print("Enter min distance:")
                 min_distance = int(input().strip())
-                print("Enter max distance:\n")
+                print("Enter max distance:")
                 max_distance = int(input().strip())
-                print("Enter seed:\n")
+                print("Enter seed:")
                 seed = int(input().strip())
                 number_of_cities, distance_matrix = symetric_random_instance(n, min_distance, max_distance, seed)
+                print(distance_matrix)
 
             elif option == 3:
                 print("Enter the number of cities:")
@@ -309,9 +326,10 @@ def main():
                 min_distance = int(input().strip())
                 print("Enter max distance:")
                 max_distance = int(input().strip())
-                print("Enter seed:\n")
+                print("Enter seed:")
                 seed = int(input().strip())
                 number_of_cities, distance_matrix = asymetric_random_instance(n, min_distance, max_distance, seed)
+                print(distance_matrix)
             
             else:
                 print("No choise - plis do it again.")
@@ -319,7 +337,6 @@ def main():
             print("Enter optimal distance (PRD):")
             best_known = int(input().strip())
             instance_exist = True
-
         else:
             print('wrong choise \nDo you want to exit? press 0 otherwise press 1')
             option = int(input().strip())
@@ -335,124 +352,39 @@ def main():
             print('1. run algorithms \n2. chose another instance')
             option = int(input().strip())
             if option == 1:
-                # k-random k=10
+                # k-random
+                print("k-random:")
                 k = 1
-                for i in range(3):
+                for i in range(4):
                     k *= 10
                     best_tour = krandom(number_of_cities, k, distance_matrix)
                     print_data(best_tour, best_known, distance_matrix)
-
+                    print("for k = ", k)
+                print("\n######################################################\n")
                 # NN
-                    #
+                print("Nearest Neighbour (start from city nr 0):")
+                best_tour = nearest_neighbor(number_of_cities, 0, distance_matrix)
+                print_data(best_tour, best_known, distance_matrix)
+                print("\n######################################################\n")
                 # NNE
-                    #
+                print("Nearest Neighbour Extended:")
+                best_tour = nearest_neighbor_extended(number_of_cities, distance_matrix)
+                print_data(best_tour, best_known, distance_matrix)
+                print("\n######################################################\n")
+                # NN swap
+                print("Nearest SWAP Neighbour")
+                best_tour = nearest_swap_neighbor(number_of_cities, distance_matrix)
+                print_data(best_tour, best_known, distance_matrix)
+                print("\n######################################################\n")
                 # 2-opt
-                    #
+                print("2-opt:")
+                best_tour = opt2(number_of_cities, distance_matrix)
+                print_data(best_tour, best_known, distance_matrix)
+                print("\n######################################################\n")
                 # eventualy other
                 pass
             else:
-                print('Aaaaaaaaaaaaa nie tym razem zlotko!')
-
-'''
-def main(param):
-
-    while True:
-        try:
-            opt, args = getopt.getopt(param, "", ['option=', 'type=', ])
-        except getopt.GetoptError as err:
-            print('err')
-            sys.exit(2)
-        try:
-            if opt[0][1] == 'load':
-                if opt[1][1] == 'symetric':
-                    sys.stdout.write("Enter name of file: ")
-                    filename = input().strip()
-                    number_of_cities, distance_matrix = read_file(filename, type='tsp')
-                                  
-                elif opt[1][1] == 'asymetric':
-                    sys.stdout.write("Enter name of file:")
-                    filename = input().strip()
-                    number_of_cities, distance_matrix = read_file(filename, type='atsp')
-
-                elif opt[1][1] == 'randeuc':
-                    sys.stdout.write("Enter the number of cities:\n")
-                    n = int(input().strip())
-                    sys.stdout.write("Enter max x:\n")
-                    max_x = int(input().strip())
-                    sys.stdout.write("Enter max y:\n")
-                    max_y = int(input().strip())
-                    number_of_cities, distance_matrix = euclidean_random_instance(n, max_x, max_y)
-
-                elif opt[1][1] == 'randsymetric':
-                    sys.stdout.write("Enter the number of cities:\n")
-                    n = int(input().strip())
-                    sys.stdout.write("Enter min distance:\n")
-                    min_distance = int(input().strip())
-                    sys.stdout.write("Enter max distance:\n")
-                    max_distance = int(input().strip())
-                    number_of_cities, distance_matrix = symetric_random_instance(n, min_distance, max_distance)
-
-                elif opt[1][1] == 'randasymetric':
-                    sys.stdout.write("Enter the number of cities:")
-                    n = int(input().strip())
-                    sys.stdout.write("Enter min distance:")
-                    min_distance = int(input().strip())
-                    sys.stdout.write("Enter max distance:")
-                    max_distance = int(input().strip())
-                    number_of_cities, distance_matrix = asymetric_random_instance(n, min_distance, max_distance)
-                while True:
-                        sys.stdout.write("1. Calculate k-random\n")
-                        sys.stdout.write("2. Calculate nearest neighbor\n")
-                        sys.stdout.write("3. Calculate weight of random tour\n")
-                        sys.stdout.write("4. Print tour\n")
-                        sys.stdout.write("5. Print distance matrix\n")
-                        sys.stdout.write("6. Calculate extended nearest neighbor\n")
-                        sys.stdout.write("7. Calculate 2opt\n")
-                        option = int(input().strip())
-                        if option == 1:
-                            sys.stdout.write("Enter numer of iterations:\n")
-                            k = int(input().strip())
-                            results, best_tour = krandom(number_of_cities, k, distance_matrix)
-                            results.sort()
-                            print(results)
-                            print('best tour: ')
-                            print(best_tour)
-                        elif option == 2:
-                            sys.stdout.write("Enter number of first city:\n")
-                            i = int(input().strip())
-                            tour = nearest_neighbor(number_of_cities, i, distance_matrix)
-                            print(tour)
-                            weight = get_weight(tour, distance_matrix)
-                            print(weight)
-                        elif option == 3:
-                            tour = rand_tour(number_of_cities)
-                            weight = get_weight(tour, distance_matrix)
-                            print(weight)
-                        elif option == 4:
-                            tour = rand_tour(number_of_cities)
-                            print_tour(tour)
-                        elif option == 5:
-                            print(distance_matrix)
-                        elif option == 6:
-                            sys.stdout.write("Enter number of first city:\n")
-                            i = int(input().strip())
-                            tour = nearest_neighbor(number_of_cities, i, distance_matrix)
-                            best_tour = nearest_swap_neighbor(tour, distance_matrix)
-                            print(best_tour)
-                            best_weight = get_weight(best_tour, distance_matrix)
-                            print(best_weight)   
-                        elif option == 7:
-                            best_tour = opt2(number_of_cities, distance_matrix)   
-                            print(best_tour) 
-                            weight = get_weight(best_tour, distance_matrix)
-                            print(weight)  
-                        else:
-                            sys.exit(2)
-
-        except IndexError as err:
-            print(err)
-            sys.exit(2)
-            '''
+                print('Instance don\'t exist!')
 
 if __name__ == '__main__':
 
