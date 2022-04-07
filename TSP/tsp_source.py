@@ -214,30 +214,56 @@ def invert(tour, i, j):
 def opt2(n, distance_matrix):
     best_solution = [None] * n
     current_solution = [None] * n
-    results = []
     solution = nearest_neighbor(n, 0, distance_matrix)
     best_solution = solution
     min_weight = get_weight(best_solution, distance_matrix)
+    i = 0
+    while i < n - 1:
+        j = i + 1
+        while j < n:
+            current_solution = best_solution.copy()
+            current_solution = invert(current_solution, i, j)
+            current_distance = get_weight(current_solution, distance_matrix)
+            if current_distance < min_weight:
+                best_solution = current_solution
+                min_weight = current_distance
+                i = 0
+                j = 0
+            j += 1
+        i += 1
+    return best_solution
+
+def opt2_full(n, distance_matrix):
+    best_solution = [None] * n
+    current_solution = [None] * n
+    solution = nearest_neighbor(n, 0, distance_matrix)
+    best_solution = solution
+    min_weight = get_weight(best_solution, distance_matrix)
+    i = 0
     improved = True
+    potential_best_solution = best_solution
+    potential_min_weight = min_weight
     while improved:
-        i = 0
         while i < n - 1:
             j = i + 1
             while j < n:
                 current_solution = best_solution.copy()
                 current_solution = invert(current_solution, i, j)
                 current_distance = get_weight(current_solution, distance_matrix)
-                if current_distance < min_weight:
-                    best_solution = current_solution
-                    min_weight = current_distance
-                    i = 0
-                    j = 0
-                results.append(min_weight)
+                if current_distance < potential_min_weight:
+                    potential_best_solution = current_solution
+                    potential_min_weight = current_distance
+
                 j += 1
             i += 1
-        improved = False
+        if potential_best_solution >= best_solution:
+            
+            improved = False
+        else:
+            best_solution = potential_best_solution
+            min_weight = potential_min_weight
+            
     return best_solution
-
 
 def prd1(solution, best_known):
     return 100 * ((solution - best_known) / best_known)
