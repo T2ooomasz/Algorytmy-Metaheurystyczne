@@ -4,6 +4,7 @@ import tsplib95
 from tsplib95 import distances
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.ticker as mticker
 import time
 
 def matrix(coord, distance):
@@ -266,6 +267,9 @@ def opt2(n, distance_matrix):
 
 #algorytm 2opt pełny
 def opt2_full(n, distance_matrix):
+    zmiany = np.array([])
+    czas = np.array([])
+    iteracja = np.array([])
     best_solution = [None] * n
     current_solution = [None] * n
     solution = nearest_neighbor_tour(n, 0, distance_matrix)
@@ -276,6 +280,7 @@ def opt2_full(n, distance_matrix):
     potential_best_solution = best_solution
     potential_min_weight = min_weight
     start_time = time.time()
+    iter = 0
     while improved:
         while i < n - 1:
             j = i + 1
@@ -286,7 +291,7 @@ def opt2_full(n, distance_matrix):
                 if current_distance < potential_min_weight:
                     potential_best_solution = current_solution
                     potential_min_weight = current_distance
-
+                
                 j += 1
             i += 1
         if potential_min_weight >= min_weight:
@@ -296,10 +301,17 @@ def opt2_full(n, distance_matrix):
             min_weight = potential_min_weight
             i=0
             j=0
+            iter += 1
+            end_time = time.time()
+            t = (end_time - start_time)
+            zmiany = np.append(zmiany, min_weight)
+            czas = np.append(czas, t)
+            iteracja = np.append(iteracja, iter)
+            #print(zmiany, czas, iteracja)
             
     end_time = time.time()
     t = (end_time - start_time)
-    return min_weight, t
+    return min_weight, t, zmiany, czas, iteracja
 
 
 def prd1(solution, best_known):
@@ -319,6 +331,7 @@ most important functions - simulation
 '''
 def simulations_alg_tsp(filename, k, X_k, TIME_k, X_nn, TIME_nn, X_nne, TIME_nne, X_nsn, TIME_nsn, X_2opt, TIME_2opt, X_2optf, TIME_2optf):
     number_of_cities, distance_matrix = read_file(filename, type='tsp')
+    '''
     # k-random
     min_weight, t = average_krandom(number_of_cities, k, distance_matrix)
     X_k.append(min_weight)
@@ -343,14 +356,16 @@ def simulations_alg_tsp(filename, k, X_k, TIME_k, X_nn, TIME_nn, X_nne, TIME_nne
     min_weight, t = opt2(number_of_cities, distance_matrix)
     X_2opt.append(min_weight)
     TIME_2opt.append(t)
-
+    '''
     # 2-opt full
-    min_weight, t = opt2_full(number_of_cities, distance_matrix)
+    min_weight, t, zmiany, czas, iteracja = opt2_full(number_of_cities, distance_matrix)
     X_2optf.append(min_weight)
     TIME_2optf.append(t)
+    return zmiany, czas, iteracja
 
 def simulations_alg_atsp(filename, k, X_k, TIME_k, X_nn, TIME_nn, X_nne, TIME_nne, X_nsn, TIME_nsn, X_2opt, TIME_2opt, X_2optf, TIME_2optf):
     number_of_cities, distance_matrix = read_file(filename, type='atsp')
+    
     # k-random
     min_weight, t = average_krandom(number_of_cities, k, distance_matrix)
     X_k.append(min_weight)
@@ -381,18 +396,6 @@ def simulations_alg_atsp(filename, k, X_k, TIME_k, X_nn, TIME_nn, X_nne, TIME_nn
     X_2optf.append(min_weight)
     TIME_2optf.append(t)
 
-#symulacja k-random
-def simulation_krandom():
-    pass
-#symulacja nearest neighour
-
-#symulacja nearest neighbour extended
-
-#symulacja nearest swap neighbour
-
-#symulacja 2opt
-
-#symulacja 2opt-full
 
 # krandom
 def save_data_k_random_atsp(X, index):
@@ -598,14 +601,49 @@ def main():
     TIME_2opt = []
     X_2optf = []
     TIME_2optf = []
-    instance_list_tsp = ['pr76.tsp', 'pr107.tsp', 'pr152.tsp', 'pr226.tsp', 'pr299.tsp']
+    instance_list_tsp = ['berlin52.tsp']
     #instance_list_atsp = ['ftv33.atsp', 'ftv55.atsp', 'ftv70.atsp', 'ftv170.atsp', 'rbg323.atsp', 'rbg443.atsp']
     for x in instance_list_tsp:
         filename = x
-        simulations_alg_tsp(filename, k, X_k, TIME_k, X_nn, TIME_nn, X_nne, TIME_nne, X_nsn, TIME_nsn, X_2opt, TIME_2opt, X_2optf, TIME_2optf)
+        zmiany, czas, iteracja = simulations_alg_tsp(filename, k, X_k, TIME_k, X_nn, TIME_nn, X_nne, TIME_nne, X_nsn, TIME_nsn, X_2opt, TIME_2opt, X_2optf, TIME_2optf)
+
+    X = zmiany
+    Best = 7542
+
+    X = X - Best
+    X = (X / Best )* 100
+    fig, ax1 = plt.subplots()
+
+    color = 'tab:red'
+    ax1.set_xlabel('Iteracja.')
+    ax1.set_ylabel('PRD [%]', color=color)
+    ax1.plot(iteracja, X, color=color)
+    ax1.tick_params(axis='y', labelcolor=color)
+    # ax1.set_xscale('log')
+    #formatter = mticker.ScalarFormatter()
+    #ax1.xaxis.set_major_formatter(formatter)
+    #ax1.xaxis.set_major_locator(mticker.FixedLocator(X))
+
+    ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
+
+    color = 'tab:blue'
+    ax2.set_ylabel('time [s]', color=color)  # we already handled the x-label with ax1
+    ax2.plot(iteracja,czas, color=color)
+    ax2.tick_params(axis='y', labelcolor=color)
+    fig.tight_layout()  # otherwise the right y-label is slightly clipped
+    plt.title('2 opt full')
+    string = "obrazki/wyniki-2optfull"
+    # string += str(1)
+    string += ".png"
+    for ax in fig.get_axes():
+        ax.label_outer()
+    plt.savefig(string)
+
+
+    '''    
     #save datas
     save_all(X_k, TIME_k, X_nn, TIME_nn, X_nne, TIME_nne, X_nsn, TIME_nsn, X_2opt, TIME_2opt, X_2optf, TIME_2optf, index)
-    '''
+    
     X_k = []
     TIME_k = []
     X_nn = []
