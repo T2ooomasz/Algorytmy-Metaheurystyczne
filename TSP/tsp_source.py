@@ -257,12 +257,13 @@ def opt2_full(n, distance_matrix):
 
                 j += 1
             i += 1
-        if potential_best_solution >= best_solution:
-            
+        if potential_min_weight >= min_weight:   
             improved = False
         else:
             best_solution = potential_best_solution
             min_weight = potential_min_weight
+            i=0
+            j=0
             
     return best_solution
 
@@ -385,7 +386,7 @@ def main():
                 # k-random
                 print("k-random:")
                 k = 1
-                for i in range(4):
+                for i in range(3):
                     k *= 10
                     best_tour = krandom(number_of_cities, k, distance_matrix)
                     print_data(best_tour, best_known, distance_matrix)
@@ -412,6 +413,10 @@ def main():
                 print_data(best_tour, best_known, distance_matrix)
                 print("\n######################################################\n")
                 # eventualy other
+                print("2-opt FULL:")
+                best_tour = opt2_full(number_of_cities, distance_matrix)
+                print_data(best_tour, best_known, distance_matrix)
+                print("\n######################################################\n")
 
             else:
                 print('Instance don\'t exist!')

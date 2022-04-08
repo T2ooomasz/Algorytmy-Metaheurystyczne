@@ -289,12 +289,13 @@ def opt2_full(n, distance_matrix):
 
                 j += 1
             i += 1
-        if potential_best_solution >= best_solution:
-            
+        if potential_min_weight >= min_weight:
             improved = False
         else:
             best_solution = potential_best_solution
             min_weight = potential_min_weight
+            i=0
+            j=0
             
     end_time = time.time()
     t = (end_time - start_time)
@@ -313,7 +314,9 @@ def print_tour(tour):
         print(tour[i], '->', tour[i + 1], '\n')
 
 
-'''most important function - simulation'''
+'''
+most important functions - simulation
+'''
 def simulations_alg_tsp(filename, k, X_k, TIME_k, X_nn, TIME_nn, X_nne, TIME_nne, X_nsn, TIME_nsn, X_2opt, TIME_2opt, X_2optf, TIME_2optf):
     number_of_cities, distance_matrix = read_file(filename, type='tsp')
     # k-random
@@ -595,8 +598,8 @@ def main():
     TIME_2opt = []
     X_2optf = []
     TIME_2optf = []
-    instance_list_tsp = ['berlin52.tsp', 'bayg29.tsp']
-    instance_list_atsp = ['br17.atsp', 'ftv64.atsp']
+    instance_list_tsp = ['pr76.tsp', 'pr107.tsp', 'pr152.tsp', 'pr226.tsp', 'pr299.tsp', 'pr439.tsp', 'pr1002.tsp']
+    instance_list_atsp = ['ftv33.atsp', 'ftv55.atsp', 'ftv70.atsp', 'ftv170.atsp', 'rbg323.atsp', 'rbg443.atsp']
     for x in instance_list_tsp:
         filename = x
         simulations_alg_tsp(filename, k, X_k, TIME_k, X_nn, TIME_nn, X_nne, TIME_nne, X_nsn, TIME_nsn, X_2opt, TIME_2opt, X_2optf, TIME_2optf)
