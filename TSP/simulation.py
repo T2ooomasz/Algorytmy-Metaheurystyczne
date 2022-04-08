@@ -171,6 +171,7 @@ def nearest(last, unvisited, distance_matrix):
 
 #algorytm nearest neighbour
 def nearest_neighbor(n, i, distance_matrix):
+    start_time = time.time()
     unvisited = list(range(n))
     unvisited.remove(i)
     last = i
@@ -180,20 +181,38 @@ def nearest_neighbor(n, i, distance_matrix):
         tour.append(nexxt)
         unvisited.remove(nexxt)
         last = nexxt
-    return get_weight(tour)
+    end_time = time.time()
+    t = (end_time - start_time)
+    return get_weight(tour, distance_matrix), t
+
+def nearest_neighbor_tour(n, i, distance_matrix):
+    unvisited = list(range(n))
+    unvisited.remove(i)
+    last = i
+    tour = [i]
+    while unvisited:
+        nexxt = nearest(last, unvisited, distance_matrix)
+        tour.append(nexxt)
+        unvisited.remove(nexxt)
+        last = nexxt
+    return tour
 
 #algorytm nearest neighbour extended
 def nearest_neighbor_extended(n, distance_matrix):
-    best_tour = nearest_neighbor(n, 0, distance_matrix)
+    start_time = time.time()
+    best_tour = nearest_neighbor_tour(n, 0, distance_matrix)
     for i in range(1,n):
-        current_tour = nearest_neighbor(n, i, distance_matrix)
+        current_tour = nearest_neighbor_tour(n, i, distance_matrix)
         if get_weight(current_tour, distance_matrix) < get_weight(best_tour, distance_matrix):
             best_tour = current_tour
-    return best_tour
+    end_time = time.time()
+    t = (end_time - start_time)        
+    return get_weight(best_tour, distance_matrix), t
 
 #algorytm nearest swal neighbour
 def nearest_swap_neighbor(number_of_cities, distance_matrix):
-    tour = nearest_neighbor(number_of_cities, 0, distance_matrix)
+    start_time = time.time()
+    tour = nearest_neighbor_tour(number_of_cities, 0, distance_matrix)
     length = len(tour)
     min_weight = get_weight(tour, distance_matrix)
     best_tour = tour.copy()
@@ -206,7 +225,10 @@ def nearest_swap_neighbor(number_of_cities, distance_matrix):
             if current_weight < min_weight:
                 best_tour = current_tour
                 min_weight = current_weight
-    return best_tour
+    end_time = time.time()
+    t = (end_time - start_time)
+
+    return get_weight(best_tour, distance_matrix), t
 
 def invert(tour, i, j):
     length_sub_list = j - i
@@ -220,9 +242,10 @@ def invert(tour, i, j):
 def opt2(n, distance_matrix):
     best_solution = [None] * n
     current_solution = [None] * n
-    solution = nearest_neighbor(n, 0, distance_matrix)
+    solution = nearest_neighbor_tour(n, 0, distance_matrix)
     best_solution = solution
     min_weight = get_weight(best_solution, distance_matrix)
+    start_time = time.time()
     i = 0
     while i < n - 1:
         j = i + 1
@@ -237,19 +260,22 @@ def opt2(n, distance_matrix):
                 j = 0
             j += 1
         i += 1
-    return best_solution
+    end_time = time.time()
+    t = (end_time - start_time)
+    return min_weight, t
 
 #algorytm 2opt pełny
 def opt2_full(n, distance_matrix):
     best_solution = [None] * n
     current_solution = [None] * n
-    solution = nearest_neighbor(n, 0, distance_matrix)
+    solution = nearest_neighbor_tour(n, 0, distance_matrix)
     best_solution = solution
     min_weight = get_weight(best_solution, distance_matrix)
     i = 0
     improved = True
     potential_best_solution = best_solution
     potential_min_weight = min_weight
+    start_time = time.time()
     while improved:
         while i < n - 1:
             j = i + 1
@@ -270,7 +296,9 @@ def opt2_full(n, distance_matrix):
             best_solution = potential_best_solution
             min_weight = potential_min_weight
             
-    return best_solution
+    end_time = time.time()
+    t = (end_time - start_time)
+    return min_weight, t
 
 
 def prd1(solution, best_known):
@@ -284,18 +312,6 @@ def print_tour(tour):
     for i in range(length - 1):
         print(tour[i], '->', tour[i + 1], '\n')
 
-def print_data(best_tour, best_known, distance_matrix):
-    print("\n----------------------------------------------------------\n")
-    # cykl
-    print("Cykl: ", best_tour)
-    # dł ścieżki
-    print("Dlugosc sciezki: ", get_weight(best_tour, distance_matrix))
-    # PRD
-
-def scatter_cities(cities_list):
-    X, Y = cities_list.T
-    plt.scatter(X, Y, marker='x')
-    plt.show()
 
 '''most important function - simulation'''
 def simulations_alg_tsp(filename, k, X_k, TIME_k, X_nn, TIME_nn, X_nne, TIME_nne, X_nsn, TIME_nsn, X_2opt, TIME_2opt, X_2optf, TIME_2optf):
@@ -306,24 +322,61 @@ def simulations_alg_tsp(filename, k, X_k, TIME_k, X_nn, TIME_nn, X_nne, TIME_nne
     TIME_k.append(t)
 
     # NN
-    best_tour = nearest_neighbor(number_of_cities, 0, distance_matrix)
+    min_weight, t = nearest_neighbor(number_of_cities, 0, distance_matrix)
+    X_nn.append(min_weight)
+    TIME_nn.append(t)
 
     # NNE
-    #print("Nearest Neighbour Extended:")
-    best_tour = nearest_neighbor_extended(number_of_cities, distance_matrix)
-    #print_data(best_tour, best_known, distance_matrix)
-    #print("\n####################################################\n")
+    min_weight, t = nearest_neighbor_extended(number_of_cities, distance_matrix)
+    X_nne.append(min_weight)
+    TIME_nne.append(t)
+
     # NN swap
-    #print("Nearest SWAP Neighbour")
-    best_tour = nearest_swap_neighbor(number_of_cities, distance_matrix)
-    #print_data(best_tour, best_known, distance_matrix)
-    #print("\n######################################################\n")
+    min_weight, t = nearest_swap_neighbor(number_of_cities, distance_matrix)
+    X_nsn.append(min_weight)
+    TIME_nsn.append(t)
+
     # 2-opt
-    #print("2-opt:")
-    best_tour = opt2(number_of_cities, distance_matrix)
-    #print_data(best_tour, best_known, distance_matrix)
-    #print("\n######################################################\n")
-    # eventualy other
+    min_weight, t = opt2(number_of_cities, distance_matrix)
+    X_2opt.append(min_weight)
+    TIME_2opt.append(t)
+
+    # 2-opt full
+    min_weight, t = opt2_full(number_of_cities, distance_matrix)
+    X_2optf.append(min_weight)
+    TIME_2optf.append(t)
+
+def simulations_alg_atsp(filename, k, X_k, TIME_k, X_nn, TIME_nn, X_nne, TIME_nne, X_nsn, TIME_nsn, X_2opt, TIME_2opt, X_2optf, TIME_2optf):
+    number_of_cities, distance_matrix = read_file(filename, type='atsp')
+    # k-random
+    min_weight, t = average_krandom(number_of_cities, k, distance_matrix)
+    X_k.append(min_weight)
+    TIME_k.append(t)
+
+    # NN
+    min_weight, t = nearest_neighbor(number_of_cities, 0, distance_matrix)
+    X_nn.append(min_weight)
+    TIME_nn.append(t)
+
+    # NNE
+    min_weight, t = nearest_neighbor_extended(number_of_cities, distance_matrix)
+    X_nne.append(min_weight)
+    TIME_nne.append(t)
+
+    # NN swap
+    min_weight, t = nearest_swap_neighbor(number_of_cities, distance_matrix)
+    X_nsn.append(min_weight)
+    TIME_nsn.append(t)
+
+    # 2-opt
+    min_weight, t = opt2(number_of_cities, distance_matrix)
+    X_2opt.append(min_weight)
+    TIME_2opt.append(t)
+
+    # 2-opt full
+    min_weight, t = opt2_full(number_of_cities, distance_matrix)
+    X_2optf.append(min_weight)
+    TIME_2optf.append(t)
 
 #symulacja k-random
 def simulation_krandom():
@@ -488,10 +541,48 @@ def save_data_time_2_opt_full_tsp(X, index):
     string += ".csv"
     np.savetxt(string, X, delimiter=",")
 
+def save_all(X_k, TIME_k, X_nn, TIME_nn, X_nne, TIME_nne, X_nsn, TIME_nsn, X_2opt, TIME_2opt, X_2optf, TIME_2optf, index):
+    save_data_k_random_tsp(X_k, index)
+    save_data_time_k_random_tsp(TIME_k, index)
+
+    save_data_nearest_neighbour_tsp(X_nn, index)
+    save_data_time_nearest_neighbour_tsp(TIME_nn, index)
+
+    save_data_nearest_neighbour_extended_tsp(X_nne, index)
+    save_data_time_nearest_neighbour_extended_tsp(TIME_nne, index)
+
+    save_data_nearest_swap_neighbour_tsp(X_nsn, index)
+    save_data_time_nearest_swap_neighbour_tsp(TIME_nsn, index)
+
+    save_data_2opt_tsp(X_2opt, index)
+    save_data_time_2opt_tsp(TIME_2opt, index)
+
+    save_data_2_opt_full_tsp(X_2optf, index)
+    save_data_time_2_opt_full_tsp(TIME_2optf, index)
+
+def save_all_2(X_k, TIME_k, X_nn, TIME_nn, X_nne, TIME_nne, X_nsn, TIME_nsn, X_2opt, TIME_2opt, X_2optf, TIME_2optf, index):
+    save_data_k_random_atsp(X_k, index)
+    save_data_time_k_random_atsp(TIME_k, index)
+
+    save_data_nearest_neighbour_atsp(X_nn, index)
+    save_data_time_nearest_neighbour_atsp(TIME_nn, index)
+
+    save_data_nearest_neighbour_extended_atsp(X_nne, index)
+    save_data_time_nearest_neighbour_extended_atsp(TIME_nne, index)
+
+    save_data_nearest_swap_neighbour_atsp(X_nsn, index)
+    save_data_time_nearest_swap_neighbour_atsp(TIME_nsn, index)
+
+    save_data_2opt_atsp(X_2opt, index)
+    save_data_time_2opt_atsp(TIME_2opt, index)
+
+    save_data_2_opt_full_atsp(X_2optf, index)
+    save_data_time_2_opt_full_atsp(TIME_2optf, index)
 
 def main():
     print("main")
-    k = 20000 # for krandom algorithm
+    index = 0
+    k = 200 # for krandom algorithm
     X_k = []
     TIME_k = []
     X_nn = []
@@ -504,15 +595,31 @@ def main():
     TIME_2opt = []
     X_2optf = []
     TIME_2optf = []
-    instance_list_tsp = ['berlin52.tsp', 'ch130.tsp', 'gr120.tsp']
+    instance_list_tsp = ['berlin52.tsp', 'bayg29.tsp']
+    instance_list_atsp = ['br17.atsp', 'ftv64.atsp']
     for x in instance_list_tsp:
         filename = x
-        #number_of_cities, distance_matrix = read_file(filename, type='tsp')
         simulations_alg_tsp(filename, k, X_k, TIME_k, X_nn, TIME_nn, X_nne, TIME_nne, X_nsn, TIME_nsn, X_2opt, TIME_2opt, X_2optf, TIME_2optf)
-
     #save datas
-    save_data_k_random_tsp(X_k, 0)
-    save_data_time_k_random_tsp(TIME_k, 0)
+    save_all(X_k, TIME_k, X_nn, TIME_nn, X_nne, TIME_nne, X_nsn, TIME_nsn, X_2opt, TIME_2opt, X_2optf, TIME_2optf, index)
+
+    X_k = []
+    TIME_k = []
+    X_nn = []
+    TIME_nn = []
+    X_nne = []
+    TIME_nne = []
+    X_nsn = []
+    TIME_nsn = []
+    X_2opt = []
+    TIME_2opt = []
+    X_2optf = []
+    TIME_2optf = []
+    for x in instance_list_atsp:
+        filename = x
+        simulations_alg_atsp(filename, k, X_k, TIME_k, X_nn, TIME_nn, X_nne, TIME_nne, X_nsn, TIME_nsn, X_2opt, TIME_2opt, X_2optf, TIME_2optf)
+    #save datas
+    save_all_2(X_k, TIME_k, X_nn, TIME_nn, X_nne, TIME_nne, X_nsn, TIME_nsn, X_2opt, TIME_2opt, X_2optf, TIME_2optf, index)
 
 if __name__ == '__main__':
     main()
