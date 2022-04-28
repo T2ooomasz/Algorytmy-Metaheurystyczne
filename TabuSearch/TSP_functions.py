@@ -5,8 +5,12 @@ from tsplib95 import distances
 import numpy as np
 import matplotlib.pyplot as plt
 
+'''
+Initialize TSP problem with set arguments
+return nesesary variables for further calculation
+'''
 def initialize_problem():
-    number_of_cities = 10
+    number_of_cities = 5
     min_distance = 10
     max_distance = 100
     seed = 0
@@ -18,6 +22,10 @@ def initialize_problem():
             rand_matrix[j][i] = rand_matrix[i][j]
     return number_of_cities, rand_matrix
 
+'''
+Initialize random solution for TSP problem
+return order of visited citis
+'''
 def random_solution(n):
     tour = list(range(n))
     random.shuffle(tour)
@@ -42,16 +50,31 @@ def invert(tour, i, j):
         i += 1
     return current_tour
 
+'''
+Generate Neighborhood - set of all neighbours 
+return set of neighbours with made move to get specific neigbour
+'''
 # something loke this but better!
-def get_neighbors(best_candidate, number_of_cities):
-    Neighborhood = np.array([0,0,0,0,0,0,0,0,0,0])
+def get_neighbors(best_candidate, number_of_cities, distance_matrix):
+    Neighborhood = []
     i = 0
     while i < number_of_cities:
         j = i+1
         while j < number_of_cities:
             best_candidate_copy = best_candidate.copy()
             best_candidate_copy = invert(best_candidate_copy, i, j)
-            Neighborhood = np.vstack([Neighborhood, best_candidate_copy])
+            Neighborhood.append([best_candidate_copy,[i,j], [get_weight(best_candidate_copy, distance_matrix)]])
             j += 1
         i += 1
-    return Neighborhood
+    Neighborhood_np = np.array(Neighborhood, dtype=object)
+    return Neighborhood_np
+
+def choose_best(Neighborhood, TabuList):
+    a = Neighborhood.shape[0]
+    best_candidate = Neighborhood[0][2]
+    index_best = 0
+    for i in range(1, a):
+        if((Neighborhood[i][2] < best_candidate) and (Neighborhood[i][1] not in TabuList)):
+            best_candidate = Neighborhood[i][2]
+            index_best = i
+    return Neighborhood[index_best]
