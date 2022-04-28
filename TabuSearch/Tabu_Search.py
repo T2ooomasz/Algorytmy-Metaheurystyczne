@@ -26,9 +26,6 @@ def main():
         best_candidate = best_candidate_array[0]
         print("--------------------------------------------------")
         print(best_candidate_array)
-        #for candidate in Neighborhood:
-            #if ( (not tabuList.contains(sCandidate)) and (fitness(sCandidate) > fitness(bestCandidate)) )
-            #bestCandidate ← sCandidate
 
         # Step 4: (update Tabu List)
         TabuList.appendleft(best_candidate_array[1])
