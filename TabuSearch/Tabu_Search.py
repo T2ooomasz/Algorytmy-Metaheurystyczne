@@ -4,19 +4,24 @@ import collections
 import TSP_functions as tsp
 
 def main():
-    # Step 1:
-    size_of_problem, matrix_tsp = tsp.initialize_problem()
-    best_solution = tsp.random_solution(size_of_problem)
-    best_candidate = best_solution
-    TabuList = collections.deque([0]*3,maxlen=3)
     
-    print(size_of_problem, matrix_tsp)
-    # Step 2:
+    size_of_problem, matrix_tsp = tsp.initialize_problem()
+    TabuList = collections.deque([0]*3,maxlen=3)
     stop_condition = False
     i = 0
+
+    # Step 1: (first solution)
+    best_solution = tsp.random_solution(size_of_problem)
+    best_candidate = best_solution
+    
+    print(size_of_problem, matrix_tsp)
+    
     while(not stop_condition):
+        #Step 2: (generate full Neighborhood)
         Neighborhood = tsp.get_neighbors(best_candidate, size_of_problem, matrix_tsp)
         print(Neighborhood)
+
+        # Step 3: (choose best candidate from Neighborhood)
         best_candidate_array = tsp.choose_best(Neighborhood, TabuList)
         best_candidate = best_candidate_array[0]
         print("--------------------------------------------------")
@@ -25,9 +30,11 @@ def main():
             #if ( (not tabuList.contains(sCandidate)) and (fitness(sCandidate) > fitness(bestCandidate)) )
             #bestCandidate ← sCandidate
 
-        # Step 4 - TabuList
+        # Step 4: (update Tabu List)
         TabuList.appendleft(best_candidate_array[1])
         print(TabuList)
+
+        # Step 5: (stop condition)
         if i > 2:
             stop_condition = True
         i += 1
