@@ -5,11 +5,17 @@ from tsplib95 import distances
 import numpy as np
 import matplotlib.pyplot as plt
 
+import TSP_initialize as init
+
 '''
 Initialize TSP problem with set arguments
 return nesesary variables for further calculation
 '''
 def initialize_problem():
+    x, y = init.initialization()
+    return x, y
+
+def initialize_problem2():
     number_of_cities = 7
     min_distance = 10
     max_distance = 100
