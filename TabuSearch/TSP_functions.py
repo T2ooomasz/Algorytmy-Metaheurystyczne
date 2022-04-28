@@ -10,7 +10,7 @@ Initialize TSP problem with set arguments
 return nesesary variables for further calculation
 '''
 def initialize_problem():
-    number_of_cities = 5
+    number_of_cities = 7
     min_distance = 10
     max_distance = 100
     seed = 0
@@ -69,6 +69,10 @@ def get_neighbors(best_candidate, number_of_cities, distance_matrix):
     Neighborhood_np = np.array(Neighborhood, dtype=object)
     return Neighborhood_np
 
+'''
+Using Neighborhood and TabuList choose best neighbour
+return best neighbour
+'''
 def choose_best(Neighborhood, TabuList):
     a = Neighborhood.shape[0]
     best_candidate = Neighborhood[0][2]
