@@ -15,7 +15,8 @@ def main():
 
     # Step 1: (first solution)
     #best_solution = tsp.random_solution(size_of_problem)
-    start_city = 0
+    #start_city = 0
+    #best_solution = tsp.nearest_neighbor_solution(size_of_problem, start_city, matrix_tsp)
     best_solution = tsp.nearest_neighbor_extended_solution(size_of_problem, matrix_tsp)
     best_candidate = best_solution
     
