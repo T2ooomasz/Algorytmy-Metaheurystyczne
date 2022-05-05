@@ -122,7 +122,7 @@ def start_nne_simulation(instance_list, tabu, MAX_noiwu, DATA):
 
 def main():
     
-    instance_list = ['ftv33.atsp', 'ftv55.atsp', 'ftv70.atsp' 'ftv100.atsp', 'ftv130.atsp', 'ftv170.atsp']
+    instance_list = ['ftv33.atsp', 'ftv55.atsp', 'ftv70.atsp', 'ftv100.atsp', 'ftv130.atsp', 'ftv170.atsp']
     min_tabu_lenght = 2
     max_tabu_lenght = 25
     step_tabu = 5
