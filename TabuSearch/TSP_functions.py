@@ -216,4 +216,4 @@ def choose_best_aspiration(Neighborhood, TabuList, best):
             TabuList.appendleft(-1)
             return choose_best_aspiration(Neighborhood, TabuList, best)
     # if still did't take move make random move
-    return Neighborhood[random.randint(0,a)]
+    return Neighborhood[random.randint(0,a-1)]
