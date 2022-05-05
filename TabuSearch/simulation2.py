@@ -18,10 +18,10 @@ def saveDATA(arr):
     arr_reshaped = arr.reshape(arr.shape[0], -2)
     
     # saving reshaped array to file.
-    np.savetxt("simulation/data_rand.csv", arr_reshaped)
+    np.savetxt("simulation/data_nne.csv", arr_reshaped)
 
 def loadDATA(DATA, arr):
-    loaded_arr = np.loadtxt("simulation/data_rand.csv")
+    loaded_arr = np.loadtxt("simulation/data_nne.csv")
   
     # This loadedArr is a 2D array, therefore
     # we need to convert it to the original
@@ -38,6 +38,7 @@ def loadDATA(DATA, arr):
         print("Yes, both the arrays are same")
     else:
         print("No, both the arrays are not same")
+    
 
 def initialization(file_name, TabuList_length, type):
     size_of_problem, matrix_tsp = init.read_file(file_name, type='atsp')
@@ -133,14 +134,14 @@ def main():
     z = len(MAX_noiwu)
     k = 2
     arr = (x,y,z,k)     #(6,5,4,2)
-    DATA_rand = np.zeros(arr)   # 4D - instance x tabu_length x MAXiterations x (best, time)
-    #DATA_nne = DATA_rand
+    #DATA_rand = np.zeros(arr)   # 4D - instance x tabu_length x MAXiterations x (best, time)
+    DATA_nne = np.zeros(arr)
 
-    start_random_simulation(instance_list, tabu, MAX_noiwu, DATA_rand)
-    #start_nne_simulation(instance_list, tabu, MAX_noiwu, DATA_nne)
+    #start_random_simulation(instance_list, tabu, MAX_noiwu, DATA_rand)
+    start_nne_simulation(instance_list, tabu, MAX_noiwu, DATA_nne)
 
-    saveDATA(DATA_rand)
-    loadDATA(DATA_rand, arr)
+    saveDATA(DATA_nne)
+    loadDATA(DATA_nne, arr)
 
 if __name__ == '__main__':
     main()
