@@ -212,6 +212,7 @@ def choose_best_aspiration(Neighborhood, TabuList, best):
     if(move_taken):
         return Neighborhood[index_best]
     else: # take last move out of tabu list
+        if(len(TabuList) == 0): TabuList.appendleft(-1)
         if(TabuList[len(TabuList) - 1] != -1):
             TabuList.appendleft(-1)
             return choose_best_aspiration(Neighborhood, TabuList, best)

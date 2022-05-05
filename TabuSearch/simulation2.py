@@ -18,10 +18,10 @@ def saveDATA(arr):
     arr_reshaped = arr.reshape(arr.shape[0], -2)
     
     # saving reshaped array to file.
-    np.savetxt("simulation/data_nne.csv", arr_reshaped)
+    np.savetxt("simulation/data_nne_sym.csv", arr_reshaped)
 
 def loadDATA(DATA, arr):
-    loaded_arr = np.loadtxt("simulation/data_nne.csv")
+    loaded_arr = np.loadtxt("simulation/data_nne_sym.csv")
   
     # This loadedArr is a 2D array, therefore
     # we need to convert it to the original
@@ -38,11 +38,9 @@ def loadDATA(DATA, arr):
         print("Yes, both the arrays are same")
     else:
         print("No, both the arrays are not same")
-    
 
-def initialization(file_name, TabuList_length, type):
-    size_of_problem, matrix_tsp = init.read_file(file_name, type='atsp')
-    #TabuList_length = 7
+def initialization(file_name, TabuList_length, type, instance_type):
+    size_of_problem, matrix_tsp = init.read_file(file_name, type=instance_type)
     TabuList = collections.deque(maxlen=TabuList_length)
     number_of_iteration_without_update = 0
     stop_condition = False
@@ -58,8 +56,8 @@ def initialization(file_name, TabuList_length, type):
         best_solution = tsp.nearest_neighbor_extended_solution(size_of_problem, matrix_tsp)
     return size_of_problem, matrix_tsp, TabuList, number_of_iteration_without_update,  stop_condition, i, best_solution, best_solution
 
-def TabuSearch(file_name, TabuList_length, MAX_number_of_iteration_without_update, type):
-    size_of_problem, matrix_tsp, TabuList, number_of_iteration_without_update, stop_condition, i, best_solution, best_candidate = initialization(file_name, TabuList_length, type)
+def TabuSearch(file_name, TabuList_length, MAX_number_of_iteration_without_update, type, instance_type):
+    size_of_problem, matrix_tsp, TabuList, number_of_iteration_without_update, stop_condition, i, best_solution, best_candidate = initialization(file_name, TabuList_length, type, instance_type)
 
     while(not stop_condition):
         #Step 2: (generate full Neighborhood)
@@ -88,7 +86,7 @@ def TabuSearch(file_name, TabuList_length, MAX_number_of_iteration_without_updat
         i += 1 
     return tsp.get_weight(best_candidate, matrix_tsp)
 
-def start_random_simulation(instance_list, tabu, MAX_noiwu, DATA):
+def start_random_simulation(instance_list, tabu, MAX_noiwu, DATA, instance_type):
     i = -1
     for instance in instance_list:
         i += 1
@@ -99,12 +97,12 @@ def start_random_simulation(instance_list, tabu, MAX_noiwu, DATA):
             for num_iter_w_update in MAX_noiwu:
                 k += 1
                 start_time = time.time()
-                best_candidate_cost = TabuSearch(instance, tabu_length, num_iter_w_update, 'rand')
+                best_candidate_cost = TabuSearch(instance, tabu_length, num_iter_w_update, 'rand', instance_type)
                 end_time = time.time()
                 DATA[i,j,k, 0] = best_candidate_cost
                 DATA[i,j,k, 1] = end_time-start_time                
         
-def start_nne_simulation(instance_list, tabu, MAX_noiwu, DATA):
+def start_nne_simulation(instance_list, tabu, MAX_noiwu, DATA, instance_type):
     i = -1
     for instance in instance_list:
         i += 1
@@ -115,20 +113,23 @@ def start_nne_simulation(instance_list, tabu, MAX_noiwu, DATA):
             for num_iter_w_update in MAX_noiwu:
                 k += 1
                 start_time = time.time()
-                best_candidate_cost = TabuSearch(instance, tabu_length, num_iter_w_update, 'nne')
+                best_candidate_cost = TabuSearch(instance, tabu_length, num_iter_w_update, 'nne', instance_type)
                 end_time = time.time()
                 DATA[i,j,k, 0] = best_candidate_cost
                 DATA[i,j,k, 1] = end_time-start_time 
 
 def main():
-    
-    instance_list = ['ftv33.atsp', 'ftv44.atsp', 'ftv55.atsp', 'ftv64.atsp', 'ftv70.atsp', 'ftv170.atsp']
+    instance_type = 'tsp'
+    #instance_list = ['ftv33.atsp', 'ftv44.atsp', 'ftv55.atsp', 'ftv64.atsp', 'ftv70.atsp', 'ftv170.atsp']
+    instance_list = ['gr24.tsp', 'gr48.tsp', 'pr76.tsp', 'pr107.tsp', 'gr120.tsp']
     min_tabu_lenght = 2
-    max_tabu_lenght = 25
+    max_tabu_lenght = 37
     step_tabu = 5
     tabu = np.arange(min_tabu_lenght, max_tabu_lenght + step_tabu, step_tabu).tolist()
-    MAX_number_of_iteration_without_update = 100
-    MAX_noiwu = np.arange(25, MAX_number_of_iteration_without_update + 1, 25).tolist()
+    #MAX_number_of_iteration_without_update = 25
+    #MAX_noiwu = np.arange(25, MAX_number_of_iteration_without_update + 1, 25).tolist()
+    #MAX_noiwu = [33,100]
+    MAX_noiwu = [33,100]
     x = len(instance_list)
     y = len(tabu)
     z = len(MAX_noiwu)
@@ -137,8 +138,8 @@ def main():
     #DATA_rand = np.zeros(arr)   # 4D - instance x tabu_length x MAXiterations x (best, time)
     DATA_nne = np.zeros(arr)
 
-    #start_random_simulation(instance_list, tabu, MAX_noiwu, DATA_rand)
-    start_nne_simulation(instance_list, tabu, MAX_noiwu, DATA_nne)
+    #start_random_simulation(instance_list, tabu, MAX_noiwu, DATA_rand, instance_type)
+    start_nne_simulation(instance_list, tabu, MAX_noiwu, DATA_nne, instance_type)
 
     saveDATA(DATA_nne)
     loadDATA(DATA_nne, arr)
