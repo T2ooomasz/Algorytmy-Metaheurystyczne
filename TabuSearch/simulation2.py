@@ -18,7 +18,7 @@ def saveDATA(arr):
     arr_reshaped = arr.reshape(arr.shape[0], -2)
     
     # saving reshaped array to file.
-    np.savetxt("simulation/data_nne_sym.csv", arr_reshaped)
+    np.savetxt("simulation/data_rand_sym2.csv", arr_reshaped)
 
 def loadDATA(DATA, arr):
     loaded_arr = np.loadtxt("simulation/data_nne_sym.csv")
@@ -121,28 +121,27 @@ def start_nne_simulation(instance_list, tabu, MAX_noiwu, DATA, instance_type):
 def main():
     instance_type = 'tsp'
     #instance_list = ['ftv33.atsp', 'ftv44.atsp', 'ftv55.atsp', 'ftv64.atsp', 'ftv70.atsp', 'ftv170.atsp']
-    instance_list = ['gr24.tsp', 'gr48.tsp', 'pr76.tsp', 'pr107.tsp', 'gr120.tsp']
+    instance_list = ['gr24.tsp', 'gr48.tsp', 'pr76.tsp', 'pr107.tsp', 'gr120.tsp', 'pr136.tsp', 'pr152.tsp']
     min_tabu_lenght = 2
     max_tabu_lenght = 37
     step_tabu = 5
     tabu = np.arange(min_tabu_lenght, max_tabu_lenght + step_tabu, step_tabu).tolist()
     #MAX_number_of_iteration_without_update = 25
     #MAX_noiwu = np.arange(25, MAX_number_of_iteration_without_update + 1, 25).tolist()
-    #MAX_noiwu = [33,100]
     MAX_noiwu = [33,100]
     x = len(instance_list)
     y = len(tabu)
     z = len(MAX_noiwu)
     k = 2
     arr = (x,y,z,k)     #(6,5,4,2)
-    #DATA_rand = np.zeros(arr)   # 4D - instance x tabu_length x MAXiterations x (best, time)
-    DATA_nne = np.zeros(arr)
+    DATA_rand = np.zeros(arr)   # 4D - instance x tabu_length x MAXiterations x (best, time)
+    #DATA_nne = np.zeros(arr)
 
-    #start_random_simulation(instance_list, tabu, MAX_noiwu, DATA_rand, instance_type)
-    start_nne_simulation(instance_list, tabu, MAX_noiwu, DATA_nne, instance_type)
+    start_random_simulation(instance_list, tabu, MAX_noiwu, DATA_rand, instance_type)
+    #start_nne_simulation(instance_list, tabu, MAX_noiwu, DATA_nne, instance_type)
 
-    saveDATA(DATA_nne)
-    loadDATA(DATA_nne, arr)
+    saveDATA(DATA_rand)
+    loadDATA(DATA_rand, arr)
 
 if __name__ == '__main__':
     main()

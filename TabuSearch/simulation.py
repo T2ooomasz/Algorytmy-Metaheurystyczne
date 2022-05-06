@@ -122,7 +122,7 @@ def start_nne_simulation(instance_list, tabu, MAX_noiwu, DATA, instance_type):
 def main():
     instance_type = 'tsp'
     #instance_list = ['ftv33.atsp', 'ftv44.atsp', 'ftv55.atsp', 'ftv64.atsp', 'ftv70.atsp', 'ftv170.atsp']
-    instance_list = ['gr24.tsp', 'gr48.tsp', 'pr76.tsp', 'pr107.tsp', 'gr120.tsp']
+    instance_list = ['gr24.tsp', 'gr48.tsp', 'pr76.tsp', 'pr107.tsp', 'gr120.tsp', 'pr136.tsp', 'pr152.tsp']
     min_tabu_lenght = 2
     max_tabu_lenght = 37
     step_tabu = 5
@@ -136,8 +136,8 @@ def main():
     k = 2
     arr = (x,y,z,k)     #(6,5,4,2)
     DATA_rand = np.zeros(arr)   # 4D - instance x tabu_length x MAXiterations x (best, time)
-    #DATA_nne = DATA_rand
-
+    #DATA_nne = np.zeros(arr)
+    
     start_random_simulation(instance_list, tabu, MAX_noiwu, DATA_rand, instance_type)
     #start_nne_simulation(instance_list, tabu, MAX_noiwu, DATA_nne, instance_type)
 
