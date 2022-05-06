@@ -197,4 +197,4 @@ def initialization():
             else:
                 instance_exist = False
 
-    return number_of_cities, distance_matrix
+    return number_of_cities, distance_matrix, best_known

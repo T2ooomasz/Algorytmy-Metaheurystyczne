@@ -12,8 +12,8 @@ Initialize TSP problem with set arguments
 return nesesary variables for further calculation
 '''
 def initialize_problem():
-    x, y = init.initialization()
-    return x, y
+    number_of_cities, distance_matrix, best_known_cost = init.initialization()
+    return number_of_cities, distance_matrix, best_known_cost
 
 def initialize_problem2():
     number_of_cities = 7

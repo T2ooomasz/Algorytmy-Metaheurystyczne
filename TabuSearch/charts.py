@@ -6,7 +6,7 @@ import csv
 from mpl_toolkits import mplot3d
 
 def loadDATA(arr):
-    loaded_arr = np.loadtxt("simulation/data_rand_sym.csv")
+    loaded_arr = np.loadtxt("simulation/data_nne.csv")
     load_original_arr = np.reshape(loaded_arr, arr)
     #print("shape of arr: ", loaded_arr.shape)
     return load_original_arr
@@ -22,16 +22,17 @@ def plot(arr):
     max_tabu_lenght = 37
     step_tabu = 5
     y = np.arange(min_tabu_lenght, max_tabu_lenght + step_tabu, step_tabu).tolist()
-    print(x)
-    print('-----------')
-    print(y)
+    #print(x)
+    #print('-----------')
+    #print(y)
     X, Y = np.meshgrid(x,y)
     z = np.zeros((arr.shape[1],arr.shape[0]))
     for i in range(len(x)):
         for j in range(len(y)):
-            print('i,j = ', i,j)
-            z[j][i] = (arr[i,j,0,0] / best_known[i] - 1) * 100
-            print(z)
+            #print('i,j = ', i,j)
+            #z[j][i] = (arr[i,j,0,0] / best_known[i] - 1) * 100 #prd
+            z[j][i] = arr[i,j,0,1] #time
+            #print(z)
     
     
     Z = np.array(z)
@@ -39,14 +40,22 @@ def plot(arr):
     ax.plot_surface(X, Y, Z, rstride=1, cstride=1,
                     cmap='viridis', edgecolor='none')
     #ax.contour3D(Xx, Yy, Zz, 50, cmap='binary')
-    ax.set_title('surface')
-    ax.set_xlabel('instance')
+    ax.set_title('NNE rozwiązanie początkowe')
+    ax.set_xlabel('instance size')
     ax.set_ylabel('tabu list size')
-    ax.set_zlabel('cost')
+    ax.set_zlabel('time [s]')
+    #ax.set_zlabel('PRD [%]')
     formatter = mticker.ScalarFormatter()
     ax.xaxis.set_major_formatter(formatter)
     ax.xaxis.set_major_locator(mticker.FixedLocator(x))
     ax.yaxis.set_major_locator(mticker.FixedLocator(y))
+
+    '''
+    xline = np.linspace(24, 152, 1000)
+    yline = xline - xline
+    zline = 0.0000005*np.power(xline, 4)
+    ax.plot3D(xline, yline, zline, 'red')
+    '''
     plt.show()
     #plt.savefig('simulation/chart1.png')
 
@@ -79,8 +88,8 @@ def scatter(arr):
     #plt.savefig('simulation/chart1.png')
 
 def main():
-    #arr = [6,6,4,2]
-    arr = [7,8,2,2]
+    arr = [6,6,4,2]
+    #arr = [7,8,2,2]
     DATA = loadDATA(arr)
     plot(DATA)
 
