@@ -20,7 +20,7 @@ class mutation():
             print("Working, but there is no \"", self.type_of_mutation, "\" type of mutation" )
 
     def mutation_0(self):
-        print("mutation 0 works")
+        pass
 
     def mutation_1(self):
-        print("mutation 1 works")
+        pass

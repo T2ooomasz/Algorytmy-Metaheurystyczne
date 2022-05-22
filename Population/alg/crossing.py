@@ -12,15 +12,20 @@ class crossing():
         self.crossing_alg()
 
     def crossing_alg(self):
-        if(self.type_of_crossing == 'KLM'):
-            self.crossing_KLM()
-        elif(self.type_of_crossing == 'RPD'):
-            self.crossing_RPD()
+        if(self.type_of_crossing == 'HX'):
+            self.crossing_HX()
+        elif(self.type_of_crossing == 'OX'):
+            self.crossing_OX()
+        elif(self.type_of_crossing == 'PMX'):
+            self.crossing_PMX()
         else:
             print("Working, but there is no \"", self.type_of_crossing, "\" type of crossing" )
 
-    def crossing_KLM(self):
-        print("\"KLM\" works")
+    def crossing_HX(self):
+        pass
 
-    def crossing_RPD(self):
-        print("\"RPD\" works")
+    def crossing_OX(self):
+        pass
+
+    def crossing_PMX(self):
+        pass

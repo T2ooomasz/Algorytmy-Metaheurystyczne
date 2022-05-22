@@ -12,17 +12,20 @@ class parents_selection():
         self.selection_alg()
 
     def selection_alg(self):
-        if self.type_of_selection == "0":
-            self.selection_0()
-        elif self.type_of_selection == "1":
-            self.selection_1()
+        if self.type_of_selection == "random":
+            self.selection_random()
+        elif self.type_of_selection == "roulette":
+            self.selection_roulette()
+        elif self.type_of_selection == "tournament":
+            self.selection_tournament()
         else:
             print("Working, but there is no \"", self.type_of_selection, "\" type of selection" )
 
-    def selection_0(self):
-        print("selection 0 works")
+    def selection_random(self):
         pass
 
-    def selection_1(self):
-        print("selection 1 works")
+    def selection_roulette(self):
+        pass
+
+    def selection_tournament(self):
         pass
