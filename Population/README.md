@@ -1,4 +1,5 @@
 link to Sprawozdanie3: https://docs.google.com/document/d/1ASpOzbVhDRBq1xjjqnGuur4ZYfRrNULt-vMWNUyswA8/edit?usp=sharing
+
 TO DO:
     implement population class
     implement initialization of first population (in population class?)
