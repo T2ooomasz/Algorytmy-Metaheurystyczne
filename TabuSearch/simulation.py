@@ -18,7 +18,7 @@ def saveDATA(arr):
     arr_reshaped = arr.reshape(arr.shape[0], -2)
     
     # saving reshaped array to file.
-    np.savetxt("simulation/atsp_data_rand_2.csv", arr_reshaped)
+    np.savetxt("simulation/atsp_data_rand_3.csv", arr_reshaped)
 
 def loadDATA(DATA, arr):
     loaded_arr = np.loadtxt("simulation/atsp_data_rand_2.csv")
@@ -121,7 +121,8 @@ def start_nne_simulation(instance_list, tabu, MAX_noiwu, DATA, instance_type):
 
 def main():
     instance_type = 'atsp'
-    instance_list = ['br17.atsp', 'ry48p.atsp', 'ftv70.atsp', 'kro124p.atsp', 'ftv170.atsp', 'rbg323.atsp', 'rbg403.atsp']
+    instance_list = ['br17.atsp', 'ftv33.atsp', 'ftv44.atsp', 'ftv55.atsp', 'ftv64.atsp', 'ftv70.atsp']
+    #instance_list = ['br17.atsp', 'ry48p.atsp', 'ftv70.atsp', 'kro124p.atsp', 'ftv170.atsp', 'rbg323.atsp', 'rbg403.atsp']
     #instance_list = ['ftv33.atsp', 'ftv44.atsp', 'ftv55.atsp', 'ftv64.atsp', 'ftv70.atsp', 'ftv170.atsp']
     #instance_list = ['gr24.tsp', 'gr48.tsp', 'pr76.tsp', 'pr107.tsp', 'gr120.tsp', 'pr136.tsp', 'pr152.tsp']
     min_tabu_lenght = 2

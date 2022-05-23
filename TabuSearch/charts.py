@@ -6,7 +6,7 @@ import csv
 from mpl_toolkits import mplot3d
 
 def loadDATA(arr):
-    loaded_arr = np.loadtxt("simulation/atsp_data_rand.csv")
+    loaded_arr = np.loadtxt("simulation/atsp_data_nne_3.csv")
     load_original_arr = np.reshape(loaded_arr, arr)
     #print("shape of arr: ", loaded_arr.shape)
     return load_original_arr
@@ -18,9 +18,10 @@ def plot(arr):
     #x = np.array([1286]) #['gr24.tsp', 'gr48.tsp', 'pr76.tsp', 'pr107.tsp', 'gr120.tsp', 'pr136.tsp', 'pr152.tsp'] 24,48,76,107,120,136,152
     #best_known = np.array([1272, 5046, 108159, 44303, 6942, 96772, 73682])
     #x = np.array([17,21,24,48,52,76,99,107])
-
-    x = np.array([33, 44, 55, 64, 70, 170])#['ftv33.atsp', 'ftv44.atsp', 'ftv55.atsp', 'ftv64.atsp', 'ftv70.atsp', 'ftv170.atsp']
-    best_known = np.array([1286, 1613, 1608, 1839, 1950, 2755])
+    #x = np.array([33, 44, 55, 64, 70, 170])#['ftv33.atsp', 'ftv44.atsp', 'ftv55.atsp', 'ftv64.atsp', 'ftv70.atsp', 'ftv170.atsp']
+    #best_known = np.array([1286, 1613, 1608, 1839, 1950, 2755])
+    x = np.array([17, 33, 44, 55, 64, 70]) #['br17.atsp', 'ftv33.atsp', 'ftv44.atsp', 'ftv55.atsp', 'ftv64.atsp', 'ftv70.atsp']
+    best_known = np.array([39, 1286, 1613, 1608, 1839, 1950])
     min_tabu_lenght = 2  # 2
     max_tabu_lenght = 37  # 37
     step_tabu = 5    #5
@@ -33,8 +34,8 @@ def plot(arr):
     for i in range(len(x)):
         for j in range(len(y)):
             #print('i,j = ', i,j)
-            z[j][i] = (arr[i,j,0,0] / best_known[i] - 1) * 100 #prd
-            #z[j][i] = arr[i,j,0,1] #time
+            #z[j][i] = (arr[i,j,1,0] / best_known[i] - 1) * 100 #prd
+            z[j][i] = arr[i,j,1,1] #time
             #print(z)
     
     
@@ -43,11 +44,11 @@ def plot(arr):
     ax.plot_surface(X, Y, Z, rstride=1, cstride=1,
                     cmap='viridis', edgecolor='none')
     #ax.contour3D(Xx, Yy, Zz, 50, cmap='binary')
-    ax.set_title('Losowe rozwiązanie początkowe')
+    ax.set_title('NNE rozwiązanie początkowe')
     ax.set_xlabel('instance size')
     ax.set_ylabel('tabu list size')
-    #ax.set_zlabel('time [s]')
-    ax.set_zlabel('PRD [%]')
+    ax.set_zlabel('time [s]')
+    #ax.set_zlabel('PRD [%]')
     formatter = mticker.ScalarFormatter()
     ax.xaxis.set_major_formatter(formatter)
     ax.xaxis.set_major_locator(mticker.FixedLocator(x))
