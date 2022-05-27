@@ -64,13 +64,13 @@ def main():
     number_for_stop = 1
 
     # run algorithm
-    alg.algorithm\
-        (number_of_populations,\
-         type_of_parents_selection,\
-         type_of_crossing,\
-         type_of_mutation,\
-         type_of_population_selection,\
-         type_of_stop_condition,\
+    alg.algorithm (
+         number_of_populations,
+         type_of_parents_selection,
+         type_of_crossing,
+         type_of_mutation,
+         type_of_population_selection,
+         type_of_stop_condition,
          number_for_stop)
 
     # print info about end of algorithm

@@ -15,13 +15,13 @@ class algorithm():
     name = "algorithm"
 
 
-    def __init__(self,\
-         number_of_populations,\
-         type_of_parents_selection,\
-         type_of_crossing,\
-         type_of_mutation,\
-         type_of_population_selection,\
-         type_of_stop_condition,\
+    def __init__(self,
+         number_of_populations,
+         type_of_parents_selection,
+         type_of_crossing,
+         type_of_mutation,
+         type_of_population_selection,
+         type_of_stop_condition,
          number_for_stop):
 
         self.number_of_populations = number_of_populations
@@ -45,10 +45,3 @@ class algorithm():
             population = pops.population_selection(population, childrens, self.type_of_population_selection)
             #best_individuum = update_best_individuum()
             stop.update_stop_condition()
-
-    def update_stop_condition(self, i):
-        if i >= 0:
-            stop_condition = True
-        else:
-            stop_condition = False
-        return stop_condition
