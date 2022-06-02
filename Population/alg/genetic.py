@@ -1,4 +1,4 @@
-from random import choice, randint, random
+from random import choice
 import tsp_initialize as init
 import tsp_functions as func
 
