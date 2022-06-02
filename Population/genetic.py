@@ -126,7 +126,6 @@ class crossing:
             child2_phenotype = func.get_weight(child2_genotype, population.distance_matrix)
             self.children.append(individual(child1_genotype, child1_phenotype))
             self.children.append(individual(child2_genotype, child2_phenotype))
-
         return self.children
 
 class mutation:
