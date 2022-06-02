@@ -8,7 +8,7 @@ link to Sprawozdanie3: https://docs.google.com/document/d/1ASpOzbVhDRBq1xjjqnGuu
     - add memetic (e.i. update children with heuristic algorithm)
     - add stop condition dependend on iteration without update
     - implement best_individuum (class? - where it will be information about if it was updated in this iteration)
-    ________________________________
+    __________________________________________________________________________________________________________________
     - implement mutation method (mutation can be dependent e.g. on number of iteration without update)
     - implement roulette_selection()
     - implement tournament_selection()
