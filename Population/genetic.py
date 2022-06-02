@@ -217,8 +217,3 @@ class genetic_algorithm:
 
 if __name__ == '__main__':
     genetic_algorithm(200, 'random', 'PMX', '0', '0')
-
-
-
-
-
