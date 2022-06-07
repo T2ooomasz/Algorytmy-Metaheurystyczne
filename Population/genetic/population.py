@@ -1,3 +1,10 @@
+from random import choice, randint, uniform
+import time
+from pandas import array
+import tsp_initialize as init
+import tsp_functions as func
+import individual
+
 class population:
 
     def __init__(self, size_of_population):
