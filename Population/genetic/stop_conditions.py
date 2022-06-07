@@ -1,3 +1,9 @@
+from random import choice, randint, uniform
+import time
+from pandas import array
+import tsp_initialize as init
+import tsp_functions as func
+
 class stop_condition:
 
     def __init__(self, type_of_stop_condition, number_for_stop):
