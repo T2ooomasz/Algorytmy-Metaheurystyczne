@@ -1,3 +1,10 @@
+from random import choice, randint, uniform
+import time
+from pandas import array
+import tsp_initialize as init
+import tsp_functions as func
+
+
 class crossing:
 
     def __init__(self, type_of_crossing = '', selected_fathers = [], selected_mothers = []):
