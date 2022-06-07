@@ -1,3 +1,12 @@
+from random import choice, randint, uniform
+import time
+from pandas import array
+import tsp_initialize as init
+import tsp_functions as func
+import selection 
+import crossing
+import selection_population
+
 class genetic_algorithm:
     
     def __init__(self, type_of_selection, type_of_selection_population, type_of_crossing, parents = []):
