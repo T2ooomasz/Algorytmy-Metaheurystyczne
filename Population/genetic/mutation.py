@@ -1,3 +1,9 @@
+from random import choice, randint, uniform
+import time
+from pandas import array
+import tsp_initialize as init
+import tsp_functions as func
+
 class mutation:
 
     def __init__(self, type_of_mutation = '', set_of_individuals = []):
