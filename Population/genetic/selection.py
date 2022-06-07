@@ -1,3 +1,9 @@
+from random import choice, randint, uniform
+import time
+from pandas import array
+import tsp_initialize as init
+import tsp_functions as func
+
 class selection:
 
     def __init__(self, type_of_selection = '', set_of_individuals = []):
@@ -62,3 +68,6 @@ class selection:
                 else:
                     continue  
         return self.selected_fathers, self.selected_mothers
+
+    def tournament_selection(self):
+        pass
