@@ -3,7 +3,8 @@ import time
 from pandas import array
 import tsp_initialize as init
 import tsp_functions as func
-
+import population as po
+import individual 
 
 class crossing:
 
@@ -51,8 +52,8 @@ class crossing:
             stop = start + half
             child1_genotype = __pmx(self.selected_fathers[i].genotype, self.selected_mothers[i].genotype, start, stop)
             child2_genotype = __pmx(self.selected_mothers[i].genotype, self.selected_fathers[i].genotype, start, stop)
-            child1_phenotype = func.get_weight(child1_genotype, pop.distance_matrix)
-            child2_phenotype = func.get_weight(child2_genotype, pop.distance_matrix)
+            child1_phenotype = func.get_weight(child1_genotype, po.pop.distance_matrix)
+            child2_phenotype = func.get_weight(child2_genotype, po.pop.distance_matrix)
             self.children.append(individual(child1_genotype, child1_phenotype))
             self.children.append(individual(child2_genotype, child2_phenotype))
         return self.children
