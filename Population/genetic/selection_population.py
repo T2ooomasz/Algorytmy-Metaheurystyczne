@@ -6,17 +6,18 @@ import tsp_functions as func
 
 class selection_population:
 
-    def __init__(self, type_of_selection_population = '', parents = [], children = []):
+    def __init__(self, type_of_selection_population = '', population = [], best_solutions = []):
         self.type_of_selection_population = type_of_selection_population
         self.total_probability = 0
         self.total_fitness = 0
         self.field = 0
         self.roulette = []
         self.fitness = []
+        self.phenotypes = []
         self.probability = []
         self.new_population = []
-        self.parents = parents
-        self.children = children
+        self.population = population
+        self.best_solutions = best_solutions
         self.selection_population_algorithm()
 
     def selection_population_algorithm(self):
@@ -28,36 +29,23 @@ class selection_population:
             print("There is no \"", self.type_of_selection_population, "\" type of selection population")
 
     def roulette_selection_population(self):
-        iterations = len(self.parents) + len(self.children)
-        for i in range(len(self.parents)):
-            self.fitness.append(1/self.parents[i].phenotype)
-        for j in range(len(self.children)):
-            self.fitness.append(1/self.children[j].phenotype)
-        for k in range(iterations):
-            self.total_fitness = self.total_fitness + self.fitness[k]
-        for l in range(len(self.parents)):
-            self.probability.append(self.fitness[l]/self.total_fitness)
-        for m in range(len(self.children), iterations):
-            self.probability.append(self.fitness[m]/self.total_fitness)
-        self.field = self.probability[0]
-        self.roulette.append(self.field)
-        for n in range(1, len(self.probability)):
+        for i in range(len(self.population)):
+            self.total_fitness = self.total_fitness + self.population[i].fitness
+        for n in range(len(self.population)):
+            self.probability.append(self.population[n].fitness/self.total_fitness)
             self.field = self.field + self.probability[n]
             self.roulette.append(self.field)
-        for _ in range(len(self.parents)):
+        for _ in range(int(len(self.population)/2)):
             r = uniform(0, 1)
             for p in range(len(self.roulette)):
                 if r <= self.roulette[p]:
-                    if p < len(self.parents):
-                        self.new_population.append(self.parents[p])
-                        break
-                    elif p >= len(self.parents) and p < len(self.roulette):
-                        self.new_population.append(self.children[p - len(self.children)])
-                        break
-                    else:
-                        break
+                    self.new_population.append(self.population[p])
+                    break
                 else:
                     continue
+        for i in range(len(self.new_population)):
+            self.phenotypes.append(self.new_population[i].phenotype)
+        self.best_solutions.append(min(self.phenotypes))
         return self.new_population
 
     def tournament_selection_population(self):
