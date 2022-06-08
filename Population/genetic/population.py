@@ -14,6 +14,8 @@ class population:
         self.phenotype = []
         self.genotype = []
         self.set_of_individuals = []
+        self.best_solution = []
+        self.initialize_population()
 
     def initialize_2opt_genotype(self):
         for _ in range(self.size_of_population):
@@ -31,6 +33,7 @@ class population:
         self.size_of_individual, self.distance_matrix = func.initialize_problem()
         self.initialize_genotype()
         self.initialize_phenotype()
+        self.best_solution.append(min(self.phenotype))
         for i in range(len(self.genotype)):
-            self.set_of_individuals.append(individual(self.genotype[i], self.phenotype[i]))
-        return self.set_of_individuals
+            self.set_of_individuals.append(individual(self.genotype[i], self.phenotype[i], (1/self.phenotype[i])))
+        return self.set_of_individuals, self.best_solution, self.size_of_population, self.distance_matrix
