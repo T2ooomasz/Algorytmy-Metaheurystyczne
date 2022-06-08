@@ -42,15 +42,10 @@ class selection:
 
     def roulette_selection(self):
         for i in range(len(self.set_of_individuals)):
-            self.fitness.append(1/self.set_of_individuals[i].phenotype)
-        for j in range(len(self.fitness)):
-            self.total_fitness = self.total_fitness + self.fitness[j]
-        for k in range(len(self.set_of_individuals)):
-            self.probability.append(self.fitness[k]/self.total_fitness)
-        self.field = self.probability[0]
-        self.roulette.append(self.field)
-        for l in range(1, len(self.probability)):
-            self.field = self.field + self.probability[l]
+            self.total_fitness = self.total_fitness + self.set_of_individuals[i].fitness
+        for n in range(len(self.set_of_individuals)):
+            self.probability.append(self.set_of_individuals[n].fitness/self.total_fitness)
+            self.field = self.field + self.probability[n]
             self.roulette.append(self.field)
         for _ in range(int(len(self.set_of_individuals)/2)):
             r1 = uniform(0,1)
