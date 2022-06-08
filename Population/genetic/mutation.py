@@ -24,7 +24,7 @@ class mutation:
     def mutation_0(self):
         r = uniform(0, 1)
         if r <= self.probability_of_mutation:
-            for i in range(20):
+            for _ in range(20):
                 rand = randint(0, self.size_of_population-1)
                 rand1 = randint(0, len(self.set_of_individuals[rand].genotype)-1)
                 rand2 = randint(0, len(self.set_of_individuals[rand].genotype)-1)
@@ -32,5 +32,11 @@ class mutation:
         return self.set_of_individuals
 
     def mutation_1(self):
-        pass
-        #losowy invert
+        r = uniform(0, 1)
+        if r <= self.probability_of_mutation:
+            for _ in range(5):
+                rand = randint(0, self.size_of_population-1)
+                rand1 = randint(0, len(self.set_of_individuals[rand].genotype)-1)
+                rand2 = randint(0, len(self.set_of_individuals[rand].genotype)-1)
+                func.invert(self.set_of_individuals[rand].genotype, rand1, rand2)
+        return self.set_of_individuals
