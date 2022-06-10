@@ -113,8 +113,6 @@ class selection:
         competition2 = []
         individuals1 = []
         individuals2 = []
-        total_fitness1 = 0
-        total_fitness2 = 0
         size_of_population = len(self.set_of_individuals)
         values = list(range(size_of_population))
         for _ in range(int(size_of_population/2)):
@@ -151,12 +149,24 @@ class selection_population:
         self.selection_population_algorithm()
 
     def selection_population_algorithm(self):
-        if self.type_of_selection_population == 'roulette':
+        if self.type_of_selection_population == 'random':
+            self.random_selection_population()
+        elif self.type_of_selection_population == 'roulette':
             self.roulette_selection_population()
         elif self.type_of_selection_population == 'tournament':
             self.tournament_selection_population()
         else:
             print("There is no \"", self.type_of_selection_population, "\" type of selection population")
+
+    def random_selection_population(self):
+        size_of_population = len(self.population)
+        values = list(range(self.population))
+        for _ in range(int(size_of_population)/2):
+            rand = choice(values)
+            self.new_population.append(self.set_of_individuals[rand])
+            values.remove(rand)
+
+        return self.new_population
 
     def roulette_selection_population(self):
         for i in range(len(self.population)):
@@ -181,7 +191,20 @@ class selection_population:
         return self.new_population
 
     def tournament_selection_population(self):
-        pass
+        competition = []
+        individuals = []
+        size_of_population = len(self.population)
+        values = list(range(size_of_population))
+        for _ in range(size_of_population):
+            for _ in range(5):
+                rand = choice(values)
+                competition.append(self.population[rand].fitness)
+                individuals.append(self.population[rand])
+            best_individual = max(competition)
+            index = competition.index(best_individual)
+            self.new_population.append(individuals[index])
+
+        return self.new_population
 
 class crossing:
     def __init__(self, type_of_crossing = '', selected_fathers = [], selected_mothers = [], distance_matrix = []):
@@ -368,10 +391,9 @@ class genetic_algorithm:
 
     def algorithm(self):
         #stop = stop_condition(self.type_of_stop_condition)
-        #while(stop.stop_condition == False):
         i = 0
         self.current_best.append(self.best_solutions[0])
-        while i < 2000:
+        while i < 500:
             sel = selection(self.type_of_selection, self.parents)
             fathers = sel.selected_fathers
             mothers = sel.selected_mothers
@@ -399,7 +421,6 @@ class genetic_algorithm:
             mut = mutation(self.distance_matrix, self.size_of_population, self.probability_of_mutation, self.type_of_mutation, self.parents)
             self.parents = mut.set_of_individuals
             #stop.update_stop_condition()
-            #self.parents
             i += 1
         return self.best_solutions, self.parents
 
@@ -542,6 +563,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
-    
